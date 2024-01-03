@@ -1,5 +1,3 @@
-import React from "react";
-import "./App.css";
 import SavedColors from "./components/SavedColors";
 import ColorPicker from "./components/ColorPicker";
 
