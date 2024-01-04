@@ -1,8 +1,17 @@
 interface Props {
   value: number;
   setValue: (value: number) => void;
+  setIsRangeDragging: (value: boolean) => void;
 }
-const InputRange = ({ value, setValue }: Props) => {
+const InputRange = ({ value, setValue, setIsRangeDragging }: Props) => {
+  const handleMouseDown = () => {
+    setIsRangeDragging(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsRangeDragging(false);
+  };
+
   return (
     <input
       type="range"
@@ -11,6 +20,8 @@ const InputRange = ({ value, setValue }: Props) => {
       id="greenRange"
       min="0"
       max="255"
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
       value={value}
       onChange={(e) => {
         setValue(Number(e.target.value));

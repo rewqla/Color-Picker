@@ -1,10 +1,14 @@
 interface Props {
-  red: number;
-  green: number;
-  blue: number;
+  color: {
+    red: number;
+    green: number;
+    blue: number;
+  };
   colorName: string;
 }
-const ColorPreview = ({ red, green, blue, colorName }: Props) => {
+const ColorPreview = ({ color, colorName }: Props) => {
+  const { red, green, blue } = color;
+
   return (
     <div className="mb-4">
       <div

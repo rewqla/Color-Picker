@@ -4,11 +4,10 @@ import ColorInput from "./ColorInput";
 import ColorPreview from "./ColorPreview";
 
 const ColorPicker = () => {
-  const [red, setRed] = useState(0);
-  const [green, setGreen] = useState(0);
-  const [blue, setBlue] = useState(0);
+  const [color, setColor] = useState({ red: 0, green: 0, blue: 0 });
   const [hex, setHex] = useState("");
   const [colorName, setColorName] = useState("");
+  const [isRangeDragging, setIsRangeDragging] = useState(false);
 
   const convertToHex = (color: number) => {
     const hex = color.toString(16);
@@ -18,7 +17,7 @@ const ColorPicker = () => {
   const fetchColorInfo = useCallback(async () => {
     try {
       const response = await fetch(
-        `https://www.thecolorapi.com/id?rgb=(${red},${green},${blue})`
+        `https://www.thecolorapi.com/id?rgb=(${color.red},${color.green},${color.blue})`
       );
       const data = await response.json();
 
@@ -26,31 +25,53 @@ const ColorPicker = () => {
     } catch (error: any) {
       console.error("Error fetching color info:", error.message);
     }
-  }, [red, green, blue]);
+  }, [color]);
 
+  const generateRandomColor = () => {
+    setColor({
+      red: Math.floor(Math.random() * 256),
+      green: Math.floor(Math.random() * 256),
+      blue: Math.floor(Math.random() * 256),
+    });
+  };
   useEffect(() => {
-    setHex(`#${convertToHex(red)}${convertToHex(green)}${convertToHex(blue)}`);
-    fetchColorInfo();
-  }, [red, green, blue, hex, fetchColorInfo]);
+    setHex(
+      `#${convertToHex(color.red)}${convertToHex(color.green)}${convertToHex(
+        color.blue
+      )}`
+    );
+
+    if (!isRangeDragging) fetchColorInfo();
+  }, [color, isRangeDragging, fetchColorInfo]);
 
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Create Your Individual Color</h1>
       <div className="row justify-content-center align-items-center">
         <div className="col-lg-8 text-center">
-          <ColorPreview
-            red={red}
-            green={green}
-            blue={blue}
-            colorName={colorName}
-          />
+          <ColorPreview color={color} colorName={colorName} />
 
-          <ColorInput label="red" value={red} setColor={setRed} />
-          <ColorInput label="green" value={green} setColor={setGreen} />
-          <ColorInput label="blue" value={blue} setColor={setBlue} />
+          <ColorInput
+            label="red"
+            value={color.red}
+            setColor={(newRed) => setColor({ ...color, red: newRed })}
+            setIsRangeDragging={setIsRangeDragging}
+          />
+          <ColorInput
+            label="green"
+            value={color.green}
+            setColor={(newGreen) => setColor({ ...color, green: newGreen })}
+            setIsRangeDragging={setIsRangeDragging}
+          />
+          <ColorInput
+            label="blue"
+            value={color.blue}
+            setColor={(newBlue) => setColor({ ...color, blue: newBlue })}
+            setIsRangeDragging={setIsRangeDragging}
+          />
         </div>
 
-        <ColorControls hex={hex} />
+        <ColorControls hex={hex} generateRandomColor={generateRandomColor} />
       </div>
     </div>
   );

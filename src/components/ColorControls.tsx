@@ -1,7 +1,8 @@
 interface Props {
   hex: string;
+  generateRandomColor: () => void;
 }
-const ColorControls = ({ hex }: Props) => {
+const ColorControls = ({ hex, generateRandomColor }: Props) => {
   return (
     <div className="col-lg-8">
       <div className="row align-items-center justify-content-around">
@@ -17,7 +18,11 @@ const ColorControls = ({ hex }: Props) => {
           </div>
         </div>
         <div className="col-auto mt-4">
-          <button type="button" className="btn btn-outline-secondary">
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={generateRandomColor}
+          >
             Random Color
           </button>
         </div>
