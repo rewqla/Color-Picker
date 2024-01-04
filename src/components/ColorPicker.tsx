@@ -14,6 +14,19 @@ const ColorPicker = () => {
     return hex.length === 1 ? "0" + hex : hex;
   };
 
+  const hexToRgb = (hex: string) => {
+    const match = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    setHex(hex);
+
+    if (match) {
+      setColor({
+        red: parseInt(match[1], 16),
+        green: parseInt(match[2], 16),
+        blue: parseInt(match[3], 16),
+      });
+    }
+  };
+
   const fetchColorInfo = useCallback(async () => {
     try {
       const response = await fetch(
@@ -34,6 +47,7 @@ const ColorPicker = () => {
       blue: Math.floor(Math.random() * 256),
     });
   };
+
   useEffect(() => {
     setHex(
       `#${convertToHex(color.red)}${convertToHex(color.green)}${convertToHex(
@@ -71,7 +85,11 @@ const ColorPicker = () => {
           />
         </div>
 
-        <ColorControls hex={hex} generateRandomColor={generateRandomColor} />
+        <ColorControls
+          hex={hex}
+          generateRandomColor={generateRandomColor}
+          hexToRgb={hexToRgb}
+        />
       </div>
     </div>
   );

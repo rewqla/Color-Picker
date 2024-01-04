@@ -1,8 +1,9 @@
 interface Props {
   hex: string;
   generateRandomColor: () => void;
+  hexToRgb: (hex: string) => void;
 }
-const ColorControls = ({ hex, generateRandomColor }: Props) => {
+const ColorControls = ({ hex, generateRandomColor, hexToRgb }: Props) => {
   return (
     <div className="col-lg-8">
       <div className="row align-items-center justify-content-around">
@@ -14,6 +15,7 @@ const ColorControls = ({ hex, generateRandomColor }: Props) => {
               className="form-control"
               id="hexInput"
               value={hex}
+              onChange={(e) => hexToRgb(e.target.value)}
             />
           </div>
         </div>
