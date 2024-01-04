@@ -1,9 +1,17 @@
+import localStorageService from "../services/localStorageService";
+
 interface Props {
   hex: string;
+  rgb: {
+    red: number;
+    green: number;
+    blue: number;
+  };
   generateRandomColor: () => void;
   hexToRgb: (hex: string) => void;
 }
-const ColorControls = ({ hex, generateRandomColor, hexToRgb }: Props) => {
+
+const ColorControls = ({ hex, rgb, generateRandomColor, hexToRgb }: Props) => {
   return (
     <div className="col-lg-8">
       <div className="row align-items-center justify-content-around">
@@ -29,7 +37,11 @@ const ColorControls = ({ hex, generateRandomColor, hexToRgb }: Props) => {
           </button>
         </div>
         <div className="col-auto mt-4">
-          <button type="button" className="btn btn-primary btn-block">
+          <button
+            type="button"
+            className="btn btn-primary btn-block"
+            onClick={() => localStorageService.setColor({ rgb: rgb, hex: hex })}
+          >
             Save Color
           </button>
         </div>

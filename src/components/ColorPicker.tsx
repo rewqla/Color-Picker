@@ -87,6 +87,7 @@ const ColorPicker = () => {
 
         <ColorControls
           hex={hex}
+          rgb={color}
           generateRandomColor={generateRandomColor}
           hexToRgb={hexToRgb}
         />
