@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Color from "../interfaces/Color";
-import localStorageService from "../services/localStorageService";
+import {
+  deleteSavedColors,
+  retrieveSavedColors,
+} from "../store/slices/localStorageSlice";
+import { useAppDispatch, useAppSelector } from "../store/configureStore";
 
 interface Props {
   onColorSelect: (color: Color) => void;
 }
 
 const SavedColors = ({ onColorSelect }: Props) => {
-  const [savedColors, setSavedColors] = useState<Color[]>([]);
+  const dispatch = useAppDispatch();
+  const savedColors = useAppSelector((state) => state.localStorage.savedColors);
 
   useEffect(() => {
-    const colors = localStorageService.getColors();
-    console.log(colors);
-    if (colors) {
-      setSavedColors(colors);
-    }
-  }, []);
+    dispatch(retrieveSavedColors());
+  }, [dispatch]);
 
   return (
     <div className="container mt-3 d-flex flex-column align-items-center">
@@ -24,7 +25,7 @@ const SavedColors = ({ onColorSelect }: Props) => {
         <p>No saved colors yet.</p>
       ) : (
         <ul className="list-group">
-          {savedColors.map((color, index) => (
+          {savedColors.map((color: Color, index: number) => (
             <li
               key={index}
               className="list-group-item p-2 my-1 border-top d-flex justify-content-between"
@@ -52,7 +53,7 @@ const SavedColors = ({ onColorSelect }: Props) => {
               </button>
               <button
                 className="btn btn-danger"
-                onClick={() => localStorageService.deleteColor(index)}
+                onClick={() => dispatch(deleteSavedColors(index))}
               >
                 Delete{" "}
               </button>

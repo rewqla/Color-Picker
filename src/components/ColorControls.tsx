@@ -1,4 +1,5 @@
-import localStorageService from "../services/localStorageService";
+import { setSavedColors } from "../store/slices/localStorageSlice";
+import { useAppDispatch } from "../store/configureStore";
 
 interface Props {
   hex: string;
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const ColorControls = ({ hex, rgb, generateRandomColor, hexToRgb }: Props) => {
+  const dispatch = useAppDispatch();
+
   return (
     <div className="col-lg-8">
       <div className="row align-items-center justify-content-around">
@@ -40,7 +43,7 @@ const ColorControls = ({ hex, rgb, generateRandomColor, hexToRgb }: Props) => {
           <button
             type="button"
             className="btn btn-primary btn-block"
-            onClick={() => localStorageService.setColor({ rgb: rgb, hex: hex })}
+            onClick={() => dispatch(setSavedColors({ rgb: rgb, hex: hex }))}
           >
             Save Color
           </button>
