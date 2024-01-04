@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import Color from "../interfaces/Color";
 import localStorageService from "../services/localStorageService";
 
-const SavedColors = () => {
+interface Props {
+  onColorSelect: (color: Color) => void;
+}
+
+const SavedColors = ({ onColorSelect }: Props) => {
   const [savedColors, setSavedColors] = useState<Color[]>([]);
 
   useEffect(() => {
@@ -40,7 +44,12 @@ const SavedColors = () => {
                 rgb({color.rgb.red}, {color.rgb.green}, {color.rgb.blue})
               </span>
               <span className="mt-2">{color.hex}</span>
-              <button className="btn btn-primary">Display Color</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => onColorSelect(color)}
+              >
+                Display Color
+              </button>
               <button
                 className="btn btn-danger"
                 onClick={() => localStorageService.deleteColor(index)}

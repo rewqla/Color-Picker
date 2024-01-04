@@ -1,9 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
+import Color from "../interfaces/Color";
 import ColorControls from "./ColorControls";
 import ColorInput from "./ColorInput";
 import ColorPreview from "./ColorPreview";
 
-const ColorPicker = () => {
+interface Props {
+  selectedColor: Color | null;
+}
+
+const ColorPicker = ({ selectedColor }: Props) => {
   const [color, setColor] = useState({ red: 0, green: 0, blue: 0 });
   const [hex, setHex] = useState("");
   const [colorName, setColorName] = useState("");
@@ -47,6 +52,16 @@ const ColorPicker = () => {
       blue: Math.floor(Math.random() * 256),
     });
   };
+
+  useEffect(() => {
+    if (selectedColor) {
+      setColor({
+        red: selectedColor.rgb.red,
+        green: selectedColor.rgb.green,
+        blue: selectedColor.rgb.blue,
+      });
+    }
+  }, [selectedColor]);
 
   useEffect(() => {
     setHex(
