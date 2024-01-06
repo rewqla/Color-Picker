@@ -1,8 +1,6 @@
+import { ColorRgb } from "./ColorRgb";
+
 export default interface Color {
-  rgb: {
-    red: number;
-    green: number;
-    blue: number;
-  };
+  rgb: ColorRgb;
   hex: string;
 }

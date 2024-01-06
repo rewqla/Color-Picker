@@ -1,9 +1,7 @@
+import { ColorRgb } from "../interfaces/ColorRgb";
+
 interface Props {
-  color: {
-    red: number;
-    green: number;
-    blue: number;
-  };
+  color: ColorRgb;
   colorName: string;
 }
 const ColorPreview = ({ color, colorName }: Props) => {

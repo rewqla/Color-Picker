@@ -9,8 +9,12 @@ interface Props {
 }
 
 const ColorPicker = ({ selectedColor }: Props) => {
-  const [color, setColor] = useState({ red: 0, green: 0, blue: 0 });
-  const [hex, setHex] = useState("");
+  const initialColor: Color = {
+    rgb: { red: 0, green: 0, blue: 0 },
+    hex: "",
+  };
+
+  const [color, setColor] = useState<Color>(initialColor);
   const [colorName, setColorName] = useState("");
   const [isRangeDragging, setIsRangeDragging] = useState(false);
 
@@ -21,21 +25,33 @@ const ColorPicker = ({ selectedColor }: Props) => {
 
   const hexToRgb = (hex: string) => {
     const match = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
-    setHex(hex);
 
     if (match) {
-      setColor({
+      const newRgb = {
         red: parseInt(match[1], 16),
         green: parseInt(match[2], 16),
         blue: parseInt(match[3], 16),
-      });
+      };
+
+      setColor((prevState) => ({
+        ...prevState,
+        rgb: newRgb,
+        hex: `#${convertToHex(newRgb.red)}${convertToHex(
+          newRgb.green
+        )}${convertToHex(newRgb.blue)}`,
+      }));
+    } else {
+      setColor((prevState) => ({
+        ...prevState,
+        hex: hex,
+      }));
     }
   };
 
   const fetchColorInfo = useCallback(async () => {
     try {
       const response = await fetch(
-        `https://www.thecolorapi.com/id?rgb=(${color.red},${color.green},${color.blue})`
+        `https://www.thecolorapi.com/id?rgb=(${color.rgb.red},${color.rgb.green},${color.rgb.blue})`
       );
       const data = await response.json();
 
@@ -47,62 +63,83 @@ const ColorPicker = ({ selectedColor }: Props) => {
 
   const generateRandomColor = () => {
     setColor({
-      red: Math.floor(Math.random() * 256),
-      green: Math.floor(Math.random() * 256),
-      blue: Math.floor(Math.random() * 256),
+      ...color,
+      rgb: {
+        red: Math.floor(Math.random() * 256),
+        green: Math.floor(Math.random() * 256),
+        blue: Math.floor(Math.random() * 256),
+      },
     });
   };
 
   useEffect(() => {
     if (selectedColor) {
-      setColor({
-        red: selectedColor.rgb.red,
-        green: selectedColor.rgb.green,
-        blue: selectedColor.rgb.blue,
-      });
+      setColor((prevState) => ({
+        ...prevState,
+        rgb: { ...selectedColor.rgb },
+      }));
     }
   }, [selectedColor]);
 
   useEffect(() => {
-    setHex(
-      `#${convertToHex(color.red)}${convertToHex(color.green)}${convertToHex(
-        color.blue
-      )}`
-    );
+    setColor((prevState) => ({
+      ...prevState,
+      hex: `#${convertToHex(prevState.rgb.red)}${convertToHex(
+        prevState.rgb.green
+      )}${convertToHex(prevState.rgb.blue)}`,
+    }));
+  }, [color.rgb]);
 
-    if (!isRangeDragging) fetchColorInfo();
-  }, [color, isRangeDragging, fetchColorInfo]);
+  useEffect(() => {
+    if (!isRangeDragging) {
+      fetchColorInfo();
+    }
+  }, [isRangeDragging, fetchColorInfo]);
 
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Create Your Individual Color</h1>
       <div className="row justify-content-center align-items-center">
         <div className="col-lg-8 text-center">
-          <ColorPreview color={color} colorName={colorName} />
+          <ColorPreview color={color.rgb} colorName={colorName} />
 
           <ColorInput
             label="red"
-            value={color.red}
-            setColor={(newRed) => setColor({ ...color, red: newRed })}
+            value={color.rgb.red}
+            setColor={(newRed) =>
+              setColor((prevState) => ({
+                ...prevState,
+                rgb: { ...prevState.rgb, red: newRed },
+              }))
+            }
             setIsRangeDragging={setIsRangeDragging}
           />
           <ColorInput
             label="green"
-            value={color.green}
-            setColor={(newGreen) => setColor({ ...color, green: newGreen })}
+            value={color.rgb.green}
+            setColor={(newGreen) =>
+              setColor((prevState) => ({
+                ...prevState,
+                rgb: { ...prevState.rgb, green: newGreen },
+              }))
+            }
             setIsRangeDragging={setIsRangeDragging}
           />
           <ColorInput
             label="blue"
-            value={color.blue}
-            setColor={(newBlue) => setColor({ ...color, blue: newBlue })}
+            value={color.rgb.blue}
+            setColor={(newBlue) =>
+              setColor((prevState) => ({
+                ...prevState,
+                rgb: { ...prevState.rgb, blue: newBlue },
+              }))
+            }
             setIsRangeDragging={setIsRangeDragging}
           />
         </div>
 
         <ColorControls
-          hex={hex}
-          rgb={color}
+          color={color}
           generateRandomColor={generateRandomColor}
           hexToRgb={hexToRgb}
         />

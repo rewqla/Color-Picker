@@ -1,20 +1,16 @@
 import { setSavedColors } from "../store/slices/localStorageSlice";
 import { useAppDispatch } from "../store/configureStore";
+import Color from "../interfaces/Color";
 
 interface Props {
-  hex: string;
-  rgb: {
-    red: number;
-    green: number;
-    blue: number;
-  };
+  color: Color;
   generateRandomColor: () => void;
   hexToRgb: (hex: string) => void;
 }
 
-const ColorControls = ({ hex, rgb, generateRandomColor, hexToRgb }: Props) => {
+const ColorControls = ({ color, generateRandomColor, hexToRgb }: Props) => {
   const dispatch = useAppDispatch();
-
+  const { hex, rgb } = color;
   return (
     <div className="col-lg-8">
       <div className="row align-items-center justify-content-around">
