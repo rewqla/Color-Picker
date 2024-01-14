@@ -18,7 +18,9 @@ const ColorPreview = ({ color, colorName }: Props) => {
           backgroundColor: `rgb(${red}, ${green}, ${blue})`,
         }}
       ></div>
-      <p className="mt-2">{colorName}</p>
+      <p className="mt-2" data-testid="color-name">
+        {colorName}
+      </p>
     </div>
   );
 };
