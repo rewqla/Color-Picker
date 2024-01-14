@@ -11,6 +11,7 @@ const ColorPreview = ({ color, colorName }: Props) => {
     <div className="mb-4">
       <div
         className="rounded border"
+        data-testid="color-preview"
         style={{
           width: "100%",
           height: "150px",
