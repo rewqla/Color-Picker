@@ -11,12 +11,13 @@ const ColorInput = ({ label, value, setColor, setIsRangeDragging }: Props) => {
   return (
     <div className="form-group mb-4">
       <label
-        htmlFor="redRange"
+        htmlFor={`${label}Range`}
         style={{ color: label, textTransform: "capitalize" }}
       >
         {label}
       </label>
       <InputRange
+        label={label}
         value={value}
         setValue={setColor}
         setIsRangeDragging={setIsRangeDragging}

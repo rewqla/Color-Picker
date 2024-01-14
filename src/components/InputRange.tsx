@@ -1,9 +1,10 @@
 interface Props {
+  label: string;
   value: number;
   setValue: (value: number) => void;
   setIsRangeDragging: (value: boolean) => void;
 }
-const InputRange = ({ value, setValue, setIsRangeDragging }: Props) => {
+const InputRange = ({ label, value, setValue, setIsRangeDragging }: Props) => {
   const handleMouseDown = () => {
     setIsRangeDragging(true);
   };
@@ -17,7 +18,7 @@ const InputRange = ({ value, setValue, setIsRangeDragging }: Props) => {
       type="range"
       className="form-range"
       style={{ width: "100%" }}
-      id="greenRange"
+      id={`${label}Range`}
       min="0"
       max="255"
       onMouseDown={handleMouseDown}
