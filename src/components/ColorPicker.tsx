@@ -1,8 +1,10 @@
 import useColorPicker from "../hooks/useColorPicker";
 import Color from "../interfaces/Color";
+import { useAppSelector } from "../store/configureStore";
 import ColorControls from "./ColorControls";
 import ColorInput from "./ColorInput";
 import ColorPreview from "./ColorPreview";
+import Spinner from "./Spinner";
 
 interface Props {
   selectedColor: Color | null;
@@ -16,7 +18,11 @@ const ColorPicker = ({ selectedColor }: Props) => {
     hexToRgb,
     setIsRangeDragging,
     generateRandomColor,
-  } = useColorPicker(selectedColor);
+  } = useColorPicker({ selectedColor });
+
+  const loading = useAppSelector((state) => state.isLoading.isLoading);
+
+  if (loading) return <Spinner />;
 
   return (
     <div className="container mt-5">

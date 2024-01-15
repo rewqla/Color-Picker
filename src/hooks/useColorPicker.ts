@@ -1,7 +1,15 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Color from "../interfaces/Color";
+import { useAppDispatch } from "../store/configureStore";
+import { setLoading } from "../store/slices/isLoadingSlice";
 
-const useColorPicker = (selectedColor: Color | null) => {
+interface Props {
+  selectedColor: Color | null;
+}
+
+const useColorPicker = ({ selectedColor }: Props) => {
+  const dispatch = useAppDispatch();
+
   const initialColor: Color = {
     rgb: { red: 0, green: 0, blue: 0 },
     hex: "",
@@ -41,19 +49,6 @@ const useColorPicker = (selectedColor: Color | null) => {
     }
   };
 
-  const fetchColorInfo = useCallback(async () => {
-    try {
-      const response = await fetch(
-        `https://www.thecolorapi.com/id?rgb=(${color.rgb.red},${color.rgb.green},${color.rgb.blue})`
-      );
-      const data = await response.json();
-
-      setColorName(data.name.value);
-    } catch (error: any) {
-      console.error("Error fetching color info:", error.message);
-    }
-  }, [color]);
-
   const generateRandomColor = () => {
     setColor({
       ...color,
@@ -83,11 +78,30 @@ const useColorPicker = (selectedColor: Color | null) => {
     }));
   }, [color.rgb]);
 
+  const fetchColor = useCallback(async () => {
+    try {
+      dispatch(setLoading(true));
+      const response = await fetch(
+        `https://www.thecolorapi.com/id?rgb=(${color.rgb.red},${color.rgb.green},${color.rgb.blue})`
+      );
+      const data = await response.json();
+
+      if (data.name.value !== colorName) {
+        setColorName(data.name.value);
+      }
+    } catch (error: any) {
+      console.error("Error fetching color info:", error.message);
+    } finally {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      dispatch(setLoading(false));
+    }
+  }, [color.rgb, colorName, dispatch]);
+
   useEffect(() => {
     if (!isRangeDragging) {
-      fetchColorInfo();
+      fetchColor();
     }
-  }, [isRangeDragging, fetchColorInfo]);
+  }, [fetchColor, isRangeDragging]);
 
   return {
     color,
