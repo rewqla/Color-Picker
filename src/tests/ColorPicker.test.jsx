@@ -25,6 +25,24 @@ test("it should convert RGB to HEX correctly", async () => {
   expect(hexInput.value).toBe("#a4b7a4");
 });
 
+test("it should convert HEX to RGB correctly", async () => {
+  renderWithProviders(<ColorPicker selectedColor={null} />);
+
+  const hexInput = await screen.findByLabelText("HEX");
+
+  fireEvent.change(hexInput, {
+    target: { value: "af12f3" },
+  });
+
+  const redInput = await screen.findByLabelText("red");
+  const greenInput = await screen.findByLabelText("green");
+  const blueInput = await screen.findByLabelText("blue");
+
+  expect(redInput.value).toBe("175");
+  expect(greenInput.value).toBe("18");
+  expect(blueInput.value).toBe("243");
+});
+
 test('it should generate a random color when the "Random Color" button is clicked', async () => {
   renderWithProviders(<ColorPicker selectedColor={null} />);
 
