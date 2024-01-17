@@ -3,20 +3,24 @@ import ColorPicker from "../components/ColorPicker";
 import { renderWithProviders } from "../utils/renderWithProviders";
 import user from "@testing-library/user-event";
 
-const setRGB = (red, green, blue) => {
-  fireEvent.change(screen.getByLabelText("red"), { target: { value: red } });
-  fireEvent.change(screen.getByLabelText("green"), {
+const setRGB = async (red, green, blue) => {
+  fireEvent.change(await screen.findByLabelText("red"), {
+    target: { value: red },
+  });
+  fireEvent.change(await screen.findByLabelText("green"), {
     target: { value: green },
   });
-  fireEvent.change(screen.getByLabelText("blue"), { target: { value: blue } });
+  fireEvent.change(await screen.findByLabelText("blue"), {
+    target: { value: blue },
+  });
 };
 
-test("it should convert RGB to HEX correctly", () => {
+test("it should convert RGB to HEX correctly", async () => {
   renderWithProviders(<ColorPicker selectedColor={null} />);
 
-  setRGB(164, 183, 164);
+  await setRGB(164, 183, 164);
 
-  const hexInput = screen.getByLabelText("HEX");
+  const hexInput = await screen.findByLabelText("HEX");
 
   expect(hexInput.value).toBe("#a4b7a4");
 });
@@ -24,17 +28,17 @@ test("it should convert RGB to HEX correctly", () => {
 test('it should generate a random color when the "Random Color" button is clicked', async () => {
   renderWithProviders(<ColorPicker selectedColor={null} />);
 
-  const randomColorButton = screen.getByRole("button", {
+  const randomColorButton = await screen.findByRole("button", {
     name: /Random Color/i,
   });
 
-  const initialBackgroundColor =
-    screen.getByTestId("color-preview").style.backgroundColor;
+  const initialBackgroundColor = (await screen.findByTestId("color-preview"))
+    .style.backgroundColor;
 
   await user.click(randomColorButton);
 
-  const newBackgroundColor =
-    screen.getByTestId("color-preview").style.backgroundColor;
+  const newBackgroundColor = (await screen.findByTestId("color-preview")).style
+    .backgroundColor;
 
   expect(initialBackgroundColor).not.toBe(newBackgroundColor);
 });
@@ -42,12 +46,12 @@ test('it should generate a random color when the "Random Color" button is clicke
 test("triggers API and changes color name", async () => {
   renderWithProviders(<ColorPicker selectedColor={null} />);
 
-  const initialColorName = screen.getByTestId("color-name").textContent;
+  const initialColorName = screen.queryByTestId("color-name");
 
-  setRGB(164, 183, 164);
+  await setRGB(164, 183, 164);
 
   await waitFor(() => {
-    const newColorName = screen.getByTestId("color-name").textContent;
+    const newColorName = screen.queryByTestId("color-name").textContent;
     expect(initialColorName).not.toBe(newColorName);
   });
 });

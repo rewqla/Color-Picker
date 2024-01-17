@@ -2,6 +2,7 @@ import { render } from "@testing-library/react";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { localStorageSlice } from "../store/slices/localStorageSlice";
+import { isLoadingSlice } from "../store/slices/isLoadingSlice";
 
 export function renderWithProviders(
   ui,
@@ -9,7 +10,10 @@ export function renderWithProviders(
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
-      reducer: { localStorage: localStorageSlice.reducer },
+      reducer: {
+        localStorage: localStorageSlice.reducer,
+        isLoading: isLoadingSlice.reducer,
+      },
       preloadedState,
     }),
     ...renderOptions
