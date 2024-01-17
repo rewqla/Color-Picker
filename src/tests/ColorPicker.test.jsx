@@ -55,3 +55,19 @@ test("triggers API and changes color name", async () => {
     expect(initialColorName).not.toBe(newColorName);
   });
 });
+
+test("Initial color should be black", async () => {
+  renderWithProviders(<ColorPicker selectedColor={null} />);
+
+  const colorNameElement = await screen.findByTestId("color-name");
+  expect(colorNameElement.textContent).toBe("Black");
+});
+
+test("Spinner should be displayed when API is requested", async () => {
+  renderWithProviders(<ColorPicker selectedColor={null} />);
+
+  setRGB(164, 183, 164);
+
+  const spinner = screen.queryByTestId("ball-triangle-loading");
+  expect(spinner).not.toBeNull();
+});
