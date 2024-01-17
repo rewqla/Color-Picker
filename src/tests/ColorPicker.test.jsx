@@ -53,8 +53,9 @@ test('it should generate a random color when the "Random Color" button is clicke
   const initialBackgroundColor = (await screen.findByTestId("color-preview"))
     .style.backgroundColor;
 
-  await user.click(randomColorButton);
-
+  await waitFor(async () => {
+    await user.click(randomColorButton);
+  });
   const newBackgroundColor = (await screen.findByTestId("color-preview")).style
     .backgroundColor;
 
@@ -66,7 +67,7 @@ test("triggers API and changes color name", async () => {
 
   const initialColorName = screen.queryByTestId("color-name");
 
-  await setRGB(164, 183, 164);
+  setRGB(164, 183, 164);
 
   await waitFor(() => {
     const newColorName = screen.queryByTestId("color-name").textContent;
