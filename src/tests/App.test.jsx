@@ -19,3 +19,18 @@ test("It should save color after clicking Save Color button", async () => {
 
   expect(noSavedColors).not.toBeInTheDocument();
 });
+
+test("It should remove after clicking Delete button", async () => {
+  renderWithProviders(<App />);
+
+  const initialSavedColors = await screen.findAllByRole("listitem");
+
+  const deleteButton = await screen.findByRole("button", { name: /Delete/i });
+  await waitFor(async () => {
+    await user.click(deleteButton);
+  });
+  await waitFor(async () => {
+    const updatedSavedColors = screen.queryAllByRole("listitem");
+    expect(updatedSavedColors.length).toBe(initialSavedColors.length - 1);
+  });
+});
